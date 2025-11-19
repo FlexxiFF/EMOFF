@@ -1,0 +1,139 @@
+{% extends "base.html" %}
+{% block title %}Admin Login{% endblock %}
+
+{% block content %}
+<div class="login-wrap">
+  <div class="login-card">
+
+    <div class="header">
+      <div class="icon">🔐</div>
+      <h1>Admin Login</h1>
+      <p>Please enter your admin password to continue.</p>
+    </div>
+
+    <form method="post" class="form">
+      <label for="password">Admin Password</label>
+      <input
+        id="password"
+        name="password"
+        type="password"
+        placeholder="•••••••••••"
+        required
+      />
+
+      <button type="submit" class="btn-primary">Access Dashboard</button>
+    </form>
+
+    <div class="footer">
+      <p>Not an admin?</p>
+      <a href="{{ url_for('login') }}" class="btn-secondary">User Login</a>
+    </div>
+  </div>
+</div>
+
+<style>
+/* Layout */
+.login-wrap {
+  display: flex;
+  justify-content: center;
+  margin-top: 60px;
+}
+
+.login-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 40px;
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 16px;
+  box-shadow: 0 12px 40px rgba(0,0,0,0.4);
+  backdrop-filter: blur(10px);
+  text-align: center;
+}
+
+/* Header */
+.header .icon {
+  font-size: 42px;
+  margin-bottom: 10px;
+}
+.header h1 {
+  margin: 0;
+  font-size: 24px;
+}
+.header p {
+  margin-top: 6px;
+  color: #9aa3b6;
+  font-size: 14px;
+}
+
+/* Form */
+.form {
+  margin-top: 30px;
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.form label {
+  text-align: left;
+  font-size: 14px;
+  color: #adb5c9;
+}
+
+.form input {
+  padding: 14px;
+  border-radius: 10px;
+  border: 1px solid rgba(255,255,255,0.08);
+  background: rgba(255,255,255,0.05);
+  color: #fff;
+  font-size: 15px;
+}
+
+.form input:focus {
+  outline: none;
+  border-color: #4e8cff;
+  box-shadow: 0 0 0 3px rgba(78,140,255,0.25);
+}
+
+/* Buttons */
+.btn-primary {
+  margin-top: 10px;
+  background: linear-gradient(90deg, #6a11cb, #2575fc);
+  border: none;
+  padding: 14px;
+  font-size: 16px;
+  font-weight: 600;
+  border-radius: 10px;
+  cursor: pointer;
+  color: #fff;
+  transition: 0.15s;
+}
+
+.btn-primary:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 18px rgba(37,117,252,0.3);
+}
+
+.btn-secondary {
+  display: inline-block;
+  padding: 12px 20px;
+  border-radius: 10px;
+  background: rgba(255,255,255,0.08);
+  color: #fff;
+  text-decoration: none;
+  transition: 0.15s;
+}
+
+.btn-secondary:hover {
+  background: rgba(255,255,255,0.14);
+}
+
+/* Footer */
+.footer {
+  margin-top: 30px;
+  border-top: 1px solid rgba(255,255,255,0.07);
+  padding-top: 20px;
+  color: #9aa3b6;
+}
+</style>
+{% endblock %}

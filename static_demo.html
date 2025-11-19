@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLEXXI Bot Control - Demo</title>
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        :root {
+            --accent: #ff4500; --accent-glow: rgba(255, 69, 0, 0.3); --cyan: #00bfff; --bg: #0a0a0a;
+            --surface: #151515; --surface-light: #1f1f1f; --border: #2a2a2a; --text: #e0e0e0;
+            --text-dim: #888; --success: #00ff88; --warning: #ffaa00; --danger: #ff3355;
+        }
+        html, body { height: 100%; }
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+            background: linear-gradient(135deg, #0a0a0a 0%, #1a0a0a 100%);
+            color: var(--text); 
+            padding: 20px;
+            font-size: 16px;
+        }
+        .container { 
+            max-width: 95%; 
+            margin: 0 auto; 
+            display: flex; 
+            flex-direction: column; 
+            height: 100%; 
+        }
+        header { 
+            text-align: center; 
+            padding: 25px 0; 
+            border-bottom: 2px solid var(--border); 
+            margin-bottom: 20px; 
+            background: linear-gradient(90deg, transparent, var(--accent-glow), transparent); 
+            flex-shrink: 0; 
+        }
+        h1 { 
+            font-size: 32px; 
+            font-weight: 700; 
+            background: linear-gradient(135deg, var(--accent), var(--cyan)); 
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent; 
+            letter-spacing: 2px; 
+        }
+        .notice {
+            background: var(--surface);
+            border: 1px solid var(--border);
+            border-radius: 12px;
+            padding: 20px;
+            margin: 20px 0;
+            text-align: center;
+        }
+        .notice h2 {
+            color: var(--accent);
+            margin-bottom: 15px;
+        }
+        .notice p {
+            margin-bottom: 15px;
+            line-height: 1.6;
+        }
+        .card { 
+            background: var(--surface); 
+            border: 1px solid var(--border); 
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); 
+            margin-bottom: 20px;
+        }
+        .card-title { 
+            font-size: 16px;
+            font-weight: 600; 
+            color: var(--accent); 
+            margin-bottom: 15px;
+            text-transform: uppercase; 
+            letter-spacing: 1px; 
+            display: flex; 
+            align-items: center; 
+            gap: 10px;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .feature {
+            background: var(--surface-light);
+            border: 1px solid var(--border);
+            border-radius: 10px;
+            padding: 15px;
+        }
+        .feature h3 {
+            color: var(--cyan);
+            margin-bottom: 10px;
+        }
+        footer {
+            text-align: center;
+            padding: 20px 0;
+            color: var(--text-dim);
+            font-size: 14px;
+            margin-top: auto;
+        }
+        a {
+            color: var(--cyan);
+            text-decoration: none;
+        }
+        a:hover {
+            text-decoration: underline;
+        }
+        button {
+            background: var(--accent); 
+            color: white; 
+            border: none; 
+            padding: 12px 20px;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600; 
+            cursor: not-allowed;
+            text-transform: uppercase; 
+            letter-spacing: 0.5px; 
+            opacity: 0.5;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>⚡ FLEXXI BOT CONTROL</h1>
+        </header>
+        
+        <div class="notice">
+            <h2>Netlify Deployment Notice</h2>
+            <p>This is a static demonstration of the FLEXXI Bot Control Panel interface.</p>
+            <p><strong>The full application requires backend services that cannot run on Netlify.</strong></p>
+            <p>For the complete functionality, please run the application locally or on a traditional server.</p>
+        </div>
+        
+        <div class="features">
+            <div class="feature">
+                <h3>Bot Control</h3>
+                <p>Manage emote bots and send commands to player accounts.</p>
+            </div>
+            <div class="feature">
+                <h3>User Management</h3>
+                <p>Admin panel for creating and managing user accounts.</p>
+            </div>
+            <div class="feature">
+                <h3>Real-time Monitoring</h3>
+                <p>Monitor bot status and player interactions in real-time.</p>
+            </div>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">Login Required</div>
+            <p>To access the full control panel, you would normally need to log in with valid credentials.</p>
+            <p>This static demo shows the interface but cannot process login requests.</p>
+            <button style="margin-top: 15px;">Login (Not Functional)</button>
+        </div>
+        
+        <div class="card">
+            <div class="card-title">Deployment Information</div>
+            <p>This application requires two continuously running services:</p>
+            <ul style="margin: 10px 0 10px 20px;">
+                <li><code>main.py</code> - The main bot service</li>
+                <li><code>web_panel.py</code> - The Flask web interface</li>
+            </ul>
+            <p>Netlify does not support continuously running backend services.</p>
+            <p>For full functionality, deploy to a traditional server or cloud platform that supports Python applications.</p>
+        </div>
+        
+        <footer>
+            <p>FLEXXI Emote Bot Control Panel | Demo Version</p>
+            <p>See <a href="DEPLOYMENT.md">DEPLOYMENT.md</a> for complete deployment instructions</p>
+        </footer>
+    </div>
+</body>
+</html>

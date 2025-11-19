@@ -1,0 +1,690 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Admin Panel — Emote Bot Control</title>
+  <style>
+    /* ========== Variables ========== */
+    :root{
+      --bg:#0b1020;
+      --panel: rgba(255,255,255,0.04);
+      --panel-2: rgba(255,255,255,0.03);
+      --glass-border: rgba(255,255,255,0.06);
+      --muted: rgba(255,255,255,0.65);
+      --text: #e9eef8;
+      --accent-1: #6a11cb; /* purple */
+      --accent-2: #2575fc; /* blue */
+      --success: #00d27a;
+      --warning: #ffb347;
+      --danger: linear-gradient(135deg,#ff416c,#ff4b2b);
+      --radius: 14px;
+      --shadow: 0 10px 30px rgba(2,6,23,0.6);
+      --glass-blur: 8px;
+      --glass-sheen: linear-gradient(180deg, rgba(255,255,255,0.02), rgba(255,255,255,0.00));
+      --max-width: 1100px;
+      --gap: 20px;
+      --fw-semibold: 600;
+      --fw-regular: 400;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", Arial;
+    }
+
+    /* ========== Reset & Base ========== */
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      min-height:100%;
+      background:
+        radial-gradient(1200px 400px at 10% 10%, rgba(97, 62, 234, 0.10), transparent 8%),
+        radial-gradient(900px 300px at 90% 90%, rgba(37,117,252,0.06), transparent 12%),
+        var(--bg);
+      color:var(--text);
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
+      padding:32px;
+      display:flex;
+      align-items:flex-start;
+      justify-content:center;
+    }
+
+    .shell{
+      width:100%;
+      max-width:var(--max-width);
+      margin: 0 auto;
+    }
+
+    h1,h2,h3{margin:0}
+    p{margin:0}
+
+    /* ========== Top header ========== */
+    .header {
+      display:flex;
+      gap:var(--gap);
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:24px;
+    }
+
+    .brand {
+      display:flex;
+      gap:16px;
+      align-items:center;
+    }
+
+    .logo {
+      width:64px;
+      height:64px;
+      border-radius:14px;
+      background: linear-gradient(135deg,var(--accent-1),var(--accent-2));
+      display:grid;
+      place-items:center;
+      box-shadow: 0 8px 30px rgba(37,117,252,0.12);
+      font-size:28px;
+      font-weight:700;
+      color:white;
+    }
+
+    .brand-title {
+      display:flex;
+      flex-direction:column;
+    }
+
+    .brand-title .title {
+      font-size:20px;
+      font-weight:700;
+      letter-spacing:-0.2px;
+    }
+    .brand-title .subtitle {
+      font-size:13px;
+      color:var(--muted);
+      margin-top:4px;
+    }
+
+    .header-actions {
+      display:flex;
+      gap:12px;
+      align-items:center;
+    }
+
+    .btn {
+      border:0;
+      padding:10px 14px;
+      border-radius:10px;
+      background:transparent;
+      color:var(--text);
+      cursor:pointer;
+      font-weight:600;
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+      transition: transform .16s ease, box-shadow .16s ease;
+      border:1px solid transparent;
+    }
+
+    .btn:active{transform:translateY(1px)}
+    .btn.ghost{
+      background: linear-gradient(180deg, rgba(255,255,255,0.02), transparent);
+      border: 1px solid var(--glass-border);
+      box-shadow: var(--shadow);
+    }
+    .btn.danger{
+      background: var(--danger);
+      color:white;
+      padding:10px 16px;
+      border-radius:12px;
+    }
+
+    /* ========== Layout ========== */
+    .grid {
+      display:grid;
+      grid-template-columns: 320px 1fr;
+      gap:24px;
+      align-items:start;
+    }
+
+    /* ========== Left column / sidebar card ========== */
+    .card {
+      background: linear-gradient(180deg, var(--panel), var(--panel-2));
+      border: 1px solid var(--glass-border);
+      border-radius:var(--radius);
+      padding:18px;
+      backdrop-filter: blur(var(--glass-blur));
+      box-shadow: var(--shadow);
+    }
+
+    .profile {
+      display:flex;
+      gap:12px;
+      align-items:center;
+      margin-bottom:16px;
+    }
+
+    .avatar {
+      width:56px;
+      height:56px;
+      border-radius:12px;
+      background: linear-gradient(135deg,var(--accent-2),var(--accent-1));
+      display:grid;
+      place-items:center;
+      color:white;
+      font-weight:700;
+      font-size:20px;
+      box-shadow: 0 8px 20px rgba(0,0,0,0.45);
+    }
+
+    .profile .meta {
+      display:flex;
+      flex-direction:column;
+    }
+    .profile .meta .who { font-weight:700; font-size:15px }
+    .profile .meta .note { color:var(--muted); font-size:13px }
+
+    /* ========== Stats ========== */
+    .stats {
+      display:grid;
+      grid-template-columns: 1fr;
+      gap:12px;
+      margin-top:8px;
+    }
+
+    .stat {
+      display:flex;
+      gap:12px;
+      align-items:center;
+      padding:12px;
+      border-radius:12px;
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+      border:1px solid rgba(255,255,255,0.02);
+    }
+
+    .stat .icon {
+      width:44px; height:44px; border-radius:10px;
+      display:grid; place-items:center;
+      font-size:20px;
+      background: linear-gradient(135deg, rgba(255,255,255,0.03), rgba(255,255,255,0.02));
+      color:var(--text);
+      box-shadow: inset 0 -6px 16px rgba(0,0,0,0.25);
+    }
+    .stat .text {
+      display:flex;
+      flex-direction:column;
+    }
+    .stat .text .num { font-size:18px; font-weight:700 }
+    .stat .text .label { font-size:13px; color:var(--muted) }
+
+    /* ========== Right column ========== */
+    .panel-header {
+      display:flex;
+      align-items:center;
+      justify-content:space-between;
+      margin-bottom:14px;
+      gap:12px;
+    }
+    .panel-title { font-size:20px; font-weight:700; }
+    .panel-sub { font-size:13px; color:var(--muted) }
+
+    /* form */
+    .form {
+      display:grid;
+      gap:12px;
+    }
+    .field {
+      display:flex;
+      flex-direction:column;
+      gap:8px;
+    }
+    label { font-size:13px; color:var(--muted); font-weight:600; letter-spacing:0.6px }
+    input[type="text"], input[type="password"], select {
+      padding:12px 14px;
+      border-radius:10px;
+      border:1px solid rgba(255,255,255,0.06);
+      background: rgba(255,255,255,0.02);
+      color:var(--text);
+      font-size:15px;
+      outline:none;
+      transition: box-shadow .12s ease, border-color .12s ease;
+    }
+    input:focus{
+      border-color: rgba(37,117,252,0.9);
+      box-shadow: 0 6px 20px rgba(37,117,252,0.06);
+    }
+
+    .muted { color:var(--muted); font-size:13px }
+
+    .primary-btn {
+      margin-top:6px;
+      padding:12px 14px;
+      border-radius:12px;
+      border:0;
+      background: linear-gradient(135deg,var(--accent-1),var(--accent-2));
+      color:white;
+      font-weight:700;
+      cursor:pointer;
+      box-shadow: 0 10px 30px rgba(106,17,203,0.15);
+    }
+
+    /* users list */
+    .users {
+      margin-top:18px;
+    }
+
+    .user-row {
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      padding:12px;
+      border-radius:10px;
+      transition: background .12s ease, transform .12s ease;
+      border:1px solid rgba(255,255,255,0.02);
+      background: linear-gradient(180deg, rgba(255,255,255,0.01), rgba(255,255,255,0.00));
+      margin-bottom:10px;
+    }
+    .user-row:hover{
+      background: rgba(255,255,255,0.02);
+      transform: translateY(-3px);
+    }
+
+    .user-left { display:flex; gap:12px; align-items:center }
+    .user-avatar-sm {
+      width:44px; height:44px; border-radius:10px;
+      display:grid; place-items:center;
+      font-weight:700; color:white;
+      background: linear-gradient(135deg,var(--accent-2),var(--accent-1));
+    }
+    .user-meta { display:flex; flex-direction:column }
+    .user-meta .name { font-weight:700 }
+    .user-meta .ip { color:var(--muted); font-size:13px; margin-top:4px }
+
+    .status {
+      font-weight:700;
+      font-size:13px;
+      padding:8px 12px;
+      border-radius:999px;
+      display:inline-flex;
+      gap:8px;
+      align-items:center;
+    }
+    .status.active { background: rgba(0,210,122,0.09); color:var(--success) }
+    .status.pending { background: rgba(255,179,71,0.08); color:var(--warning) }
+
+    /* empty */
+    .empty {
+      padding:28px;
+      border-radius:12px;
+      text-align:center;
+      color:var(--muted);
+      border:1px dashed rgba(255,255,255,0.03);
+    }
+
+    /* footer */
+    .panel-footer {
+      margin-top:18px;
+      display:flex;
+      gap:12px;
+      align-items:center;
+      justify-content:space-between;
+      color:var(--muted);
+      font-size:13px;
+    }
+
+    /* responsive */
+    @media (max-width:980px){
+      .grid{ grid-template-columns: 1fr; }
+      .header{ flex-direction:column; align-items:flex-start; gap:12px }
+      .header-actions{ width:100%; justify-content:space-between }
+    }
+
+    @media (max-width:520px){
+      body{ padding:16px }
+      .logo{ width:52px; height:52px }
+      .brand-title .title{ font-size:16px }
+    }
+  </style>
+</head>
+<body>
+  <div class="shell" role="main">
+    <header class="header" aria-label="Admin header">
+      <div class="brand" aria-hidden="false">
+        <div class="logo" aria-hidden="true">EB</div>
+        <div class="brand-title">
+          <div class="title">Emote Bot — Admin</div>
+          <div class="subtitle">Manage users • control access • audit logs</div>
+        </div>
+      </div>
+
+      <div class="header-actions" role="toolbar" aria-label="Top actions">
+        <button class="btn ghost" id="open-help" title="Help">❓ Help</button>
+        <a href="/" class="btn" title="Main panel">🎮 Main Panel</a>
+        <a href="/logout" class="btn danger" title="Logout">👋 Logout</a>
+      </div>
+    </header>
+
+    <section class="grid">
+      <!-- Left column -->
+      <aside class="card" aria-labelledby="overview-title">
+        <div class="profile" role="region" aria-label="Admin profile">
+          <div class="avatar">A</div>
+          <div class="meta">
+            <div class="who">Admin</div>
+            <div class="note">Full system access</div>
+          </div>
+        </div>
+
+        <div id="overview-title" style="display:flex;justify-content:space-between;align-items:center;margin-bottom:10px">
+          <strong style="font-size:15px">Overview</strong>
+          <span class="muted">Realtime</span>
+        </div>
+
+        <div class="stats" aria-hidden="false">
+          <div class="stat">
+            <div class="icon">👥</div>
+            <div class="text"><div class="num" id="stat-users">{{ total_users }}</div><div class="label">Total users</div></div>
+          </div>
+
+          <div class="stat">
+            <div class="icon">✅</div>
+            <div class="text"><div class="num" id="stat-active">{{ active_users }}</div><div class="label">Active</div></div>
+          </div>
+
+          <div class="stat">
+            <div class="icon">⏳</div>
+            <div class="text"><div class="num" id="stat-pending">{{ pending_users }}</div><div class="label">Pending</div></div>
+          </div>
+        </div>
+      </aside>
+
+      <!-- Right column -->
+      <main>
+        <div class="card" style="margin-bottom:18px">
+          <div class="panel-header">
+            <div>
+              <div class="panel-title">Create new user account</div>
+              <div class="panel-sub">Add a user quickly — passwords are shown once when created</div>
+            </div>
+            <div class="muted">All actions are logged</div>
+          </div>
+
+          <form class="form" id="create-user-form" method="POST" action="/admin/create_user">
+            <div class="field">
+              <label for="user_id">User ID</label>
+              <input id="user_id" name="user_id" type="text" placeholder="unique user id" required />
+              <div class="muted">Used for sign in. Only lowercase letters, numbers, and hyphens recommended.</div>
+            </div>
+
+            <div class="field">
+              <label for="password">Password</label>
+              <input id="password" name="password" type="password" placeholder="Set a secure password" required />
+              <div class="muted">You will see the generated password once. Store it securely.</div>
+            </div>
+
+            <div class="field">
+              <label for="expiration_days">Account Expiration (days)</label>
+              <input id="expiration_days" name="expiration_days" type="number" placeholder="e.g., 30" min="0" />
+              <div class="muted">Set to 0 for no expiration. Leave blank for no expiration.</div>
+            </div>
+
+            <div style="display:flex;gap:12px;align-items:center">
+              <button class="primary-btn" type="submit">✨ Create User Account</button>
+              <div id="create-msg" class="muted" aria-live="polite"></div>
+            </div>
+          </form>
+        </div>
+
+        <div class="card">
+          <div style="display:flex;align-items:center;justify-content:space-between">
+            <div>
+              <div style="font-weight:700;font-size:18px">Existing Users</div>
+              <div class="muted" style="margin-top:6px">Manage and review current accounts</div>
+            </div>
+            <div style="display:flex;gap:8px;align-items:center">
+              <input id="filter" placeholder="Search users" style="padding:10px;border-radius:10px;border:1px solid rgba(255,255,255,0.04);background:transparent;color:var(--text)" />
+            </div>
+          </div>
+
+          <div class="users" id="users-list" aria-live="polite" style="margin-top:14px">
+            {% if users %}
+              {% for user_id, user_data in users.items() %}
+                <div class="user-row">
+                  <div class="user-left">
+                    <div class="user-avatar-sm" aria-hidden="true">{{ user_id|first|upper }}</div>
+                    <div class="user-meta">
+                      <div class="name">{{ user_id }} {% if user_data.banned %}<span style="color:var(--danger)">[BANNED]</span>{% endif %}</div>
+                      <div class="ip">{% if user_data.ip %}{{ user_data.ip }}{% else %}<span style="color:var(--muted)">Not logged in yet</span>{% endif %}</div>
+                      <div class="muted">
+                        {% if user_data.expires %}
+                          Expires: {{ user_data.expires }}
+                        {% else %}
+                          No expiration
+                        {% endif %}
+                      </div>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:8px;align-items:center">
+                    <!-- Edit User Button -->
+                    <button class="btn ghost" onclick="openEditUserModal('{{ user_id }}')" title="Edit User">✏️</button>
+                    <!-- Delete User Button (except for admin) -->
+                    {% if user_id != 'admin' %}
+                    <form method="POST" action="/admin/delete_user/{{ user_id }}" style="display:inline;" onsubmit="return confirm('Are you sure you want to delete user {{ user_id }}?')">
+                      <button type="submit" class="btn danger" title="Delete User">🗑️</button>
+                    </form>
+                    {% endif %}
+                  </div>
+                </div>
+              {% endfor %}
+            {% else %}
+              <div class="empty">No users found — create the first account above.</div>
+            {% endif %}
+          </div>
+
+          <div class="panel-footer">
+            <div>Tip: Click a user to view details (demo)</div>
+            <div class="muted">Showing <span id="users-count">{{ users|length }}</span> users</div>
+          </div>
+        </div>
+      </main>
+    </section>
+  </div>
+
+  <!-- Edit User Modal -->
+  <div id="edit-user-modal" style="display:none;position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);z-index:1000;align-items:center;justify-content:center;">
+    <div class="card" style="width:100%;max-width:400px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:20px;">
+        <h2 style="margin:0;">Edit User</h2>
+        <button class="btn ghost" onclick="closeEditUserModal()">✕</button>
+      </div>
+      <form id="edit-user-form" method="POST" action="/admin/edit_user/">
+        <input type="hidden" id="edit-user-id" name="user_id">
+        <div class="field">
+          <label for="edit-password">New Password</label>
+          <input id="edit-password" name="password" type="password" placeholder="Enter new password" />
+        </div>
+        
+        <div class="field">
+          <label for="edit-expiration-days">Account Expiration (days)</label>
+          <input id="edit-expiration-days" name="expiration_days" type="number" placeholder="e.g., 30" min="0" />
+          <div class="muted">Set to 0 to remove expiration. Leave blank to keep current.</div>
+        </div>
+        
+        <div class="field">
+          <label>
+            <input type="checkbox" id="edit-ban-user" name="ban_user" />
+            Ban this user
+          </label>
+        </div>
+        
+        <div class="field" id="ban-reason-field" style="display:none;">
+          <label for="edit-ban-reason">Ban Reason</label>
+          <input id="edit-ban-reason" name="ban_reason" type="text" placeholder="Reason for ban" />
+        </div>
+        
+        <button class="primary-btn" type="submit">Update User</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Edit Admin Password Card -->
+  <div class="card" style="margin-top:18px">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Change Admin Password</div>
+        <div class="panel-sub">Update the administrator password</div>
+      </div>
+    </div>
+
+    <form class="form" method="POST" action="/admin/edit_admin_password">
+      <div class="field">
+        <label for="current_password">Current Admin Password</label>
+        <input id="current_password" name="current_password" type="password" placeholder="Enter current admin password" required />
+      </div>
+
+      <div class="field">
+        <label for="new_password">New Admin Password</label>
+        <input id="new_password" name="new_password" type="password" placeholder="Enter new admin password" required />
+      </div>
+
+      <div class="field">
+        <label for="confirm_password">Confirm New Password</label>
+        <input id="confirm_password" name="confirm_password" type="password" placeholder="Confirm new password" required />
+      </div>
+
+      <button class="primary-btn" type="submit">Update Admin Password</button>
+    </form>
+  </div>
+
+  <!-- Maintenance Mode Card -->
+  <div class="card" style="margin-top:18px">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Maintenance Mode</div>
+        <div class="panel-sub">Enable or disable website maintenance</div>
+      </div>
+    </div>
+
+    <form class="form" method="POST" action="/admin/set_maintenance">
+      <div class="field">
+        <label>
+          <input type="checkbox" id="enable_maintenance" name="enable_maintenance" {% if maintenance_mode %}checked{% endif %} />
+          Enable Maintenance Mode
+        </label>
+      </div>
+
+      <div class="field">
+        <label for="maintenance_message">Maintenance Message</label>
+        <input id="maintenance_message" name="maintenance_message" type="text" placeholder="Maintenance message" value="{{ maintenance_message }}" />
+      </div>
+
+      <button class="primary-btn" type="submit">Update Maintenance Settings</button>
+    </form>
+  </div>
+
+  <!-- Security Logs Card -->
+  <div class="card" style="margin-top:18px">
+    <div class="panel-header">
+      <div>
+        <div class="panel-title">Security Logs</div>
+        <div class="panel-sub">Unauthorized access attempts</div>
+      </div>
+      <div>
+        <form method="POST" action="/admin/clear_logs" style="display:inline;">
+          <button class="btn danger" type="submit" onclick="return confirm('Are you sure you want to clear all security logs?')">Clear Logs</button>
+        </form>
+      </div>
+    </div>
+
+    <div style="max-height: 400px; overflow-y: auto;">
+      {% if security_logs %}
+        <table style="width: 100%; border-collapse: collapse;">
+          <thead>
+            <tr style="background: rgba(255,255,255,0.05); text-align: left;">
+              <th style="padding: 10px; border-bottom: 1px solid var(--border);">Timestamp</th>
+              <th style="padding: 10px; border-bottom: 1px solid var(--border);">IP Address</th>
+              <th style="padding: 10px; border-bottom: 1px solid var(--border);">User ID</th>
+              <th style="padding: 10px; border-bottom: 1px solid var(--border);">Password</th>
+              <th style="padding: 10px; border-bottom: 1px solid var(--border);">Reason</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for log in security_logs | reverse %}
+              <tr style="border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <td style="padding: 10px;">{{ log.timestamp }}</td>
+                <td style="padding: 10px;">{{ log.ip }}</td>
+                <td style="padding: 10px;">{{ log.user_id }}</td>
+                <td style="padding: 10px;">{{ log.password }}</td>
+                <td style="padding: 10px; color: var(--danger);">{{ log.reason }}</td>
+              </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      {% else %}
+        <div class="empty">No security logs found.</div>
+      {% endif %}
+    </div>
+  </div>
+
+  <script>
+    // Simple client-side filtering
+    (function(){
+      const el = id => document.getElementById(id);
+      
+      // search filter
+      if (el('filter')) {
+        el('filter').addEventListener('input', (e) => {
+          const filter = e.target.value.toLowerCase();
+          const rows = document.querySelectorAll('.user-row');
+          
+          rows.forEach(row => {
+            const name = row.querySelector('.name').textContent.toLowerCase();
+            row.style.display = name.includes(filter) ? '' : 'none';
+          });
+        });
+      }
+      
+      // Handle form submission feedback
+      if (el('create-user-form')) {
+        el('create-user-form').addEventListener('submit', function() {
+          const msg = el('create-msg');
+          if (msg) {
+            msg.textContent = 'Creating user...';
+          }
+        });
+      }
+      
+      // demo header actions
+      if (el('open-help')) {
+        el('open-help').addEventListener('click', ()=> alert('Contact your system administrator for help.'));
+      }
+      
+      // Edit user modal functions
+      function openEditUserModal(userId) {
+        document.getElementById('edit-user-id').value = userId;
+        document.getElementById('edit-user-form').action = '/admin/edit_user/' + userId;
+        document.getElementById('edit-password').value = '';
+        document.getElementById('edit-expiration-days').value = '';
+        document.getElementById('edit-ban-user').checked = false;
+        document.getElementById('edit-ban-reason').value = '';
+        document.getElementById('ban-reason-field').style.display = 'none';
+        document.getElementById('edit-user-modal').style.display = 'flex';
+      }
+      
+      function closeEditUserModal() {
+        document.getElementById('edit-user-modal').style.display = 'none';
+      }
+      
+      // Show/hide ban reason field based on checkbox
+      document.getElementById('edit-ban-user').addEventListener('change', function() {
+        document.getElementById('ban-reason-field').style.display = this.checked ? 'block' : 'none';
+      });
+      
+      // Close modal when clicking outside
+      window.onclick = function(event) {
+        const modal = document.getElementById('edit-user-modal');
+        if (event.target == modal) {
+          modal.style.display = 'none';
+        }
+      }
+    })();
+  </script>
+</body>
+</html>

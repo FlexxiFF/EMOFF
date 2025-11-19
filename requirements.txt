@@ -1,0 +1,25 @@
+# Web framework
+flask
+
+# HTTP requests
+requests
+aiohttp
+
+# Protocol Buffers
+protobuf
+protobuf_decoder
+
+# Cryptography
+pycryptodome
+
+# System utilities
+psutil
+
+# JWT handling
+pyjwt
+
+# Date/time utilities
+pytz
+
+# CLI formatting
+cfonts
